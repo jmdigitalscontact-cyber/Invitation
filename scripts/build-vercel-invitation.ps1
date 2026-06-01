@@ -10,7 +10,7 @@ Write-Host "Building static preview at: $dest"
 
 # Preserve preview-only files before wipe
 $preserve = @{}
-foreach ($name in @("static-preview.js", "README.md", "vercel.json")) {
+foreach ($name in @("static-preview.js", "README.md")) {
     $path = Join-Path $templateDir $name
     if (Test-Path $path) {
         $preserve[$name] = Get-Content $path -Raw
