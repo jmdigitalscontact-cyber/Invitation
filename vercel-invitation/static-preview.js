@@ -6,6 +6,10 @@
 
   window.__WEDDING_STATIC_PREVIEW__ = true;
 
+  if (sessionStorage.getItem("wedding-music-muted") !== "1") {
+    sessionStorage.setItem("wedding-music-was-playing", "1");
+  }
+
   const PREVIEW_INVITE_ID = "PREVIEW";
   const PREVIEW_TOKEN = "preview-static-token";
 

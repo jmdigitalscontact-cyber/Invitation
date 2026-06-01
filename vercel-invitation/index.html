@@ -218,10 +218,31 @@
       </button>
     </section>
 
+    <div id="wedding-audio-player" data-turbo-permanent>
+      <audio id="wedding-music" loop preload="auto">
+        <source src="./audio/ambient.mp3" type="audio/mpeg" />
+      </audio>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.13/dist/turbo.es2017-umd.min.js"></script>
+    <script src="./static-preview.js"></script>
+    <script src="./script.js"></script>
     <script>
       (function () {
         const btn = document.getElementById("enter-btn");
-        btn?.addEventListener("click", () => {
+        btn?.addEventListener("click", async () => {
+          sessionStorage.setItem("wedding-music-was-playing", "1");
+          sessionStorage.setItem("wedding-music-muted", "0");
+          const audio = document.getElementById("wedding-music");
+          if (audio) {
+            audio.volume = 0.35;
+            try {
+              await audio.play();
+              sessionStorage.setItem("wedding-music-started", "1");
+            } catch {
+              // Browser may block until a later gesture; home page will retry.
+            }
+          }
           const url = new URL("./home.html", location.href);
           url.searchParams.set("intro", "1");
           const invite = (new URLSearchParams(location.search).get("invite") || "").trim();
