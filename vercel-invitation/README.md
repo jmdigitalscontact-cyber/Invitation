@@ -6,6 +6,7 @@ This folder is a **preview-only** copy of the invitation site for showing client
 
 - Intro (`index.html`), home, story, venues, attire, details, FAQ
 - Music, navigation, animations, photo lightboxes
+- **Refresh** on any page returns guests to the intro (`index.html`) and resets background music
 - **RSVP page UI** with a **simulated** guest (`rsvp.html?invite=PREVIEW` or open RSVP from the banner)
 
 ## What does not work (by design)
