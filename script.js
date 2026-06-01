@@ -841,6 +841,7 @@ function initWeddingMusic() {
 }
 
 function initMobileNav() {
+  if (window.__WEDDING_STATIC_PREVIEW__ === true) return;
   if (introScreen || document.querySelector(".mobile-nav")) return;
 
   const currentPath = normalizePath(window.location.pathname);

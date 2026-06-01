@@ -3990,8 +3990,15 @@ button:not(.index-open-btn):not(.real-env-seal):hover {
   pointer-events: auto;
 }
 
-html.wedding-static-preview .music-toggle {
+html.wedding-static-preview .music-toggle,
+html.wedding-static-preview .mobile-nav {
   display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+html.wedding-static-preview .site-nav {
+  display: flex !important;
 }
 
 .music-toggle {

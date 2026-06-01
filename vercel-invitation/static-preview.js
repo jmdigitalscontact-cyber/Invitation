@@ -11,8 +11,18 @@
     document.querySelectorAll(".music-toggle").forEach((el) => el.remove());
   }
 
-  removeMusicToggleUi();
-  document.addEventListener("turbo:load", removeMusicToggleUi);
+  function removeMobileNavUi() {
+    document.querySelectorAll(".mobile-nav").forEach((el) => el.remove());
+  }
+
+  function applyPreviewChromeFixes() {
+    removeMusicToggleUi();
+    removeMobileNavUi();
+  }
+
+  applyPreviewChromeFixes();
+  document.addEventListener("turbo:load", applyPreviewChromeFixes);
+  document.addEventListener("DOMContentLoaded", applyPreviewChromeFixes);
 
   if (sessionStorage.getItem("wedding-music-muted") !== "1") {
     sessionStorage.setItem("wedding-music-was-playing", "1");
@@ -151,6 +161,14 @@
       #static-preview-banner a:hover { background: rgba(154, 182, 157, 0.5); }
       body.has-static-preview-banner { padding-top: 3.25rem !important; }
       body.has-static-preview-banner .site-nav { margin-top: 0; }
+      html.wedding-static-preview .mobile-nav {
+        display: none !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+      }
+      html.wedding-static-preview .site-nav {
+        display: flex !important;
+      }
     `;
 
     document.head.appendChild(style);
