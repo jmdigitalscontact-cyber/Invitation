@@ -1,0 +1,2 @@
+Place your wedding ambient track here as ambient.mp3.
+The music toggle on the invitation site loads ./audio/ambient.mp3 after a guest opens the envelope.

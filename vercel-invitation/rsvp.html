@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1a1a1a" />
+    <meta name="description" content="RSVP for Jason & Rhona Mae wedding â€” November 11, 2026." />
+    <title>RSVP | Jason & Rhona Mae</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+      as="style"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="preload" href="./photos/photos/background.jpg" as="image" />
+  </head>
+  <body class="inner-page rsvp-page cinematic-page">
+    <div class="cinematic-backdrop" aria-hidden="true">
+      <div class="cinematic-backdrop__media">
+        <img
+          class="cinematic-backdrop__photo"
+          src="./photos/photos/bg-pages.jpg"
+          alt=""
+          width="3300"
+          height="2200"
+          decoding="async"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <div class="cinematic-backdrop__shade" aria-hidden="true"></div>
+      </div>
+      <div class="cinematic-backdrop__frame" aria-hidden="true"></div>
+    </div>
+
+    <div class="book-shell">
+      <div class="book-stack">
+        <div class="page">
+          <nav class="site-nav" aria-label="Primary">
+            <a class="site-nav-link" href="./home.html">Home</a>
+            <a class="site-nav-link" href="./story.html">Our Story</a>
+            <a class="site-nav-link" href="./venues.html">Venues</a>
+            <a class="site-nav-link" href="./attire.html">Attire</a>
+            <a class="site-nav-link" href="./details.html">Details</a>
+            <a class="site-nav-link" href="./faq.html">FAQ</a>
+            <a class="site-nav-link site-nav-link-rsvp" href="./rsvp.html" aria-current="page">RSVP</a>
+          </nav>
+          <main class="page-shell">
+            <header class="page-intro">
+              <p class="page-intro-eyebrow">RSVP</p>
+              <h1 class="page-intro-title">Respond With Love</h1>
+              <p class="page-intro-lead" id="rsvp-intro-lead">
+                Please confirm your attendance using your personal invitation link.
+              </p>
+            </header>
+            <section class="section" data-no-scroll-reveal>
+              <div class="card rsvp-access-card" id="rsvp-access-card">
+                <p class="card-label">Invitation only</p>
+                <h2>We would love to hear from you</h2>
+                <p>
+                  RSVP is for invited guests only. Open the personal link or scan the QR code from
+                  your invitation to respond.
+                </p>
+                <p class="rsvp-access-hint">
+                  If you need help, please contact Jason &amp; Rhona Mae directly.
+                </p>
+                <p id="rsvp-access-feedback" class="warning" role="status" aria-live="polite" hidden></p>
+              </div>
+
+              <div class="card" id="rsvp-form-card" hidden>
+                <p class="card-label">Your response</p>
+                <h2 id="rsvp-guest-heading">Welcome</h2>
+                <p id="rsvp-guest-meta"></p>
+                <form id="secured-rsvp-form">
+                  <fieldset class="rsvp-fieldset">
+                    <legend class="rsvp-legend">Attendance</legend>
+                    <label for="rsvp-attending">
+                      Will you attend?
+                      <select
+                        id="rsvp-attending"
+                        name="attending"
+                        required
+                        aria-describedby="attending-hint rsvp-feedback"
+                      >
+                        <option value="">Select one</option>
+                        <option value="yes">Yes, with joy</option>
+                        <option value="no">Regretfully no</option>
+                      </select>
+                    </label>
+                    <p id="attending-hint" class="field-hint">Please let us know if you can join us.</p>
+                    <label id="attendee-count-label" for="rsvp-attendee-count">
+                      Number of guests including you
+                      <input type="number" id="rsvp-attendee-count" name="attendee_count" min="1" value="1" />
+                    </label>
+                    <div id="attendee-names-label" hidden>
+                      <textarea name="attendee_names" rows="4" aria-hidden="true" tabindex="-1"></textarea>
+                    </div>
+                    <div id="invited-guest-checklist-wrap" hidden>
+                      <p class="invited-guest-heading">Guests who will attend</p>
+                      <p class="invited-guest-hint">Select only the guests who will attend.</p>
+                      <div id="invited-guest-checklist"></div>
+                    </div>
+                  </fieldset>
+                  <fieldset class="rsvp-fieldset">
+                    <legend class="rsvp-legend">Additional details</legend>
+                    <label for="rsvp-dietary">
+                      Dietary restrictions (optional)
+                      <textarea id="rsvp-dietary" name="dietary_restrictions" rows="3"></textarea>
+                    </label>
+                    <label for="rsvp-notes">
+                      Message to the couple (optional)
+                      <textarea id="rsvp-notes" name="special_notes" rows="3"></textarea>
+                    </label>
+                  </fieldset>
+                  <p id="rsvp-feedback" class="rsvp-feedback" role="status" aria-live="polite"></p>
+                  <div class="rsvp-actions">
+                    <button type="submit" class="btn">Submit RSVP</button>
+                  </div>
+                </form>
+              </div>
+            </section>
+          </main>
+        </div>
+      </div>
+    </div>
+    <div id="wedding-audio-player" data-turbo-permanent>
+      <audio id="wedding-music" loop preload="none">
+        <source src="./audio/ambient.mp3" type="audio/mpeg" />
+      </audio>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.13/dist/turbo.es2017-umd.min.js"></script>
+    <script src="./static-preview.js"></script>
+    <script src="./script.js"></script>
+    <script>
+      (function () {
+        if (!document.body.classList.contains("rsvp-page")) return;
+
+        const API_BASE = "./rsvp/api.php";
+        const TOKEN_KEY = "wedding-rsvp-token";
+        const accessCard = document.getElementById("rsvp-access-card");
+        const formCard = document.getElementById("rsvp-form-card");
+        const introLead = document.getElementById("rsvp-intro-lead");
+        const securedForm = document.getElementById("secured-rsvp-form");
+        const accessFeedback = document.getElementById("rsvp-access-feedback");
+        const submitFeedback = document.getElementById("rsvp-feedback");
+        const guestHeading = document.getElementById("rsvp-guest-heading");
+        const guestMeta = document.getElementById("rsvp-guest-meta");
+        const attendeeCountInput = document.getElementById("rsvp-attendee-count");
+        const attendeeCountLabel = document.getElementById("attendee-count-label");
+        const attendeeNamesLabel = document.getElementById("attendee-names-label");
+        const invitedGuestChecklistWrap = document.getElementById("invited-guest-checklist-wrap");
+        const invitedGuestChecklist = document.getElementById("invited-guest-checklist");
+        const attendingSelect = document.getElementById("rsvp-attending");
+        const submitBtn = securedForm?.querySelector('button[type="submit"]');
+        const urlParams = new URLSearchParams(window.location.search);
+        const qrInvitationId =
+          (urlParams.get("invite") || sessionStorage.getItem("wedding-qr-invite-id") || "").trim();
+        if (qrInvitationId) {
+          sessionStorage.setItem("wedding-qr-invite-id", qrInvitationId);
+        }
+
+        let authToken = null;
+        let invitation = null;
+
+        const introLeadAuthenticated =
+          "Please confirm your attendance using your personal invitation link.";
+        const introLeadGated =
+          "RSVP is by invitation only. Use the personal link or QR code we sent you to respond.";
+
+        function setFeedback(el, message, isError) {
+          if (!el) return;
+          el.textContent = message || "";
+          el.classList.remove("warning", "is-error", "is-success");
+          el.hidden = !message;
+          if (message) {
+            el.classList.add(isError ? "is-error" : "is-success");
+            requestAnimationFrame(() => {
+              el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            });
+          }
+        }
+
+        function escapeHtml(value) {
+          const div = document.createElement("div");
+          div.textContent = String(value || "");
+          return div.innerHTML;
+        }
+
+        function decodeHtmlEntities(value) {
+          const textarea = document.createElement("textarea");
+          textarea.innerHTML = String(value || "");
+          return textarea.value;
+        }
+
+        function getToken() {
+          return sessionStorage.getItem(TOKEN_KEY) || "";
+        }
+
+        function saveToken(token) {
+          sessionStorage.setItem(TOKEN_KEY, token);
+          authToken = token;
+        }
+
+        function clearToken() {
+          sessionStorage.removeItem(TOKEN_KEY);
+          authToken = null;
+          invitation = null;
+        }
+
+        function setAuthView(isAuthenticated) {
+          document.body.classList.toggle("rsvp-gated", !isAuthenticated);
+          accessCard.hidden = isAuthenticated;
+          formCard.hidden = !isAuthenticated;
+          if (introLead) {
+            introLead.textContent = isAuthenticated ? introLeadAuthenticated : introLeadGated;
+          }
+          if (isAuthenticated) {
+            formCard.classList.add("is-visible");
+          } else {
+            formCard.classList.remove("is-visible");
+          }
+        }
+
+        function focusAccessHeading() {
+          const heading = accessCard?.querySelector("h2");
+          if (!heading) return;
+          heading.setAttribute("tabindex", "-1");
+          heading.focus({ preventScroll: true });
+        }
+
+        function showAccessDenied(message = "") {
+          setAuthView(false);
+          if (accessFeedback) {
+            accessFeedback.hidden = !message;
+            accessFeedback.textContent = message;
+            accessFeedback.className = message ? "warning" : "";
+            if (message) {
+              requestAnimationFrame(() => {
+                accessFeedback.scrollIntoView({ behavior: "smooth", block: "nearest" });
+              });
+            }
+          }
+          focusAccessHeading();
+        }
+
+        function setAttendanceFields() {
+          const isYes = attendingSelect?.value === "yes";
+          attendeeCountLabel.hidden = !isYes;
+          const hasInvitedGuestNames =
+            Array.isArray(invitation?.invited_guest_names) && invitation.invited_guest_names.length > 0;
+
+          attendeeNamesLabel.hidden = true;
+          if (invitedGuestChecklistWrap) {
+            invitedGuestChecklistWrap.hidden = !isYes || !hasInvitedGuestNames;
+          }
+          attendeeCountInput.required = isYes;
+          attendeeCountInput.readOnly = hasInvitedGuestNames;
+          attendeeCountInput.disabled = hasInvitedGuestNames;
+          attendeeCountInput.classList.toggle("is-readonly", hasInvitedGuestNames);
+          attendeeCountInput.title = hasInvitedGuestNames
+            ? "Auto-calculated from selected invited guests"
+            : "";
+
+          if (hasInvitedGuestNames) {
+            attendeeCountInput.value = getCheckedInvitedGuestNames().length;
+          }
+
+          attendingSelect?.removeAttribute("aria-invalid");
+        }
+
+        function getCheckedInvitedGuestNames() {
+          if (!invitedGuestChecklist) return [];
+          return Array.from(
+            invitedGuestChecklist.querySelectorAll('input[name="invited_guest_choice"]:checked')
+          )
+            .map((input) => String(input.value || "").trim())
+            .filter(Boolean);
+        }
+
+        function renderInvitedGuestChecklist(selectedNames = []) {
+          if (!invitedGuestChecklist) return;
+          invitedGuestChecklist.innerHTML = "";
+
+          const names = Array.isArray(invitation?.invited_guest_names)
+            ? invitation.invited_guest_names
+                .map((n) => decodeHtmlEntities(String(n || "")).trim())
+                .filter(Boolean)
+            : [];
+
+          if (!names.length) {
+            if (invitedGuestChecklistWrap) invitedGuestChecklistWrap.hidden = true;
+            return;
+          }
+
+          const selectedSet = new Set(
+            (Array.isArray(selectedNames) ? selectedNames : []).map((n) => String(n || "").trim())
+          );
+
+          names.forEach((name, index) => {
+            const row = document.createElement("label");
+            row.className = "invited-guest-row";
+            const inputId = `invited-guest-${index}`;
+            row.innerHTML = `
+              <input type="checkbox" id="${inputId}" name="invited_guest_choice" value="${escapeHtml(
+              name
+            )}" ${selectedSet.has(name) ? "checked" : ""} />
+              <span class="invited-guest-name">${escapeHtml(name)}</span>
+            `;
+            invitedGuestChecklist.appendChild(row);
+          });
+
+          function syncAttendeeCountFromCheckboxes() {
+            const checkedCount = getCheckedInvitedGuestNames().length;
+            if (attendingSelect?.value === "yes") {
+              attendeeCountInput.value = checkedCount;
+            }
+          }
+
+          invitedGuestChecklist
+            .querySelectorAll('input[name="invited_guest_choice"]')
+            .forEach((checkbox) => checkbox.addEventListener("change", syncAttendeeCountFromCheckboxes));
+
+          syncAttendeeCountFromCheckboxes();
+          securedForm.elements.attendee_names.value = getCheckedInvitedGuestNames().join("\n");
+        }
+
+        async function api(action, payload, method = "POST") {
+          const url = `${API_BASE}?action=${encodeURIComponent(action)}`;
+          const options = {
+            method,
+            headers: { "Content-Type": "application/json" },
+          };
+          if (method === "POST") options.body = JSON.stringify(payload || {});
+          const res = await fetch(url, options);
+          const data = await res.json();
+          if (!res.ok || !data.success) {
+            throw new Error(data.error || data.message || "Request failed");
+          }
+          return data;
+        }
+
+        function applyInvitationState() {
+          if (!invitation) return;
+          guestHeading.textContent = `Welcome, ${decodeHtmlEntities(invitation.guest_name)}`;
+          guestMeta.textContent = `You may bring up to ${invitation.max_guests} guest${
+            Number(invitation.max_guests) === 1 ? "" : "s"
+          }.`;
+          attendeeCountInput.max = invitation.max_guests;
+          attendeeCountInput.value = Math.min(
+            Number(attendeeCountInput.value || 1),
+            Number(invitation.max_guests || 1)
+          );
+          renderInvitedGuestChecklist();
+          setAttendanceFields();
+        }
+
+        async function loadExistingRsvp() {
+          if (!authToken) return;
+          try {
+            const response = await fetch(
+              `${API_BASE}?action=get-rsvp-status&token=${encodeURIComponent(authToken)}`
+            );
+            const data = await response.json();
+            if (!data.success || !data.data) return;
+
+            const rsvp = data.data;
+            securedForm.elements.attending.value = rsvp.attending || "";
+            securedForm.elements.attendee_count.value = rsvp.attendee_count || 1;
+            securedForm.elements.dietary_restrictions.value = rsvp.dietary_restrictions || "";
+            securedForm.elements.special_notes.value = rsvp.special_notes || "";
+            const attendeeNames = Array.isArray(rsvp.attendees)
+              ? rsvp.attendees.map((person) => person.name || person.attendee_name || "").filter(Boolean)
+              : [];
+            securedForm.elements.attendee_names.value = attendeeNames.join("\n");
+            renderInvitedGuestChecklist(attendeeNames);
+            setAttendanceFields();
+          } catch (error) {
+            setFeedback(submitFeedback, "Unable to load your current RSVP yet.", true);
+          }
+        }
+
+        async function hydrateFromToken(token) {
+          if (!token) return false;
+          authToken = token;
+          try {
+            const response = await fetch(
+              `${API_BASE}?action=get-invitation-details&token=${encodeURIComponent(token)}`
+            );
+            const data = await response.json();
+            if (!data.success) return false;
+            invitation = data.data;
+            applyInvitationState();
+            setAuthView(true);
+            await loadExistingRsvp();
+            return true;
+          } catch (error) {
+            return false;
+          }
+        }
+
+        async function loginViaQrInvitation(invitationId) {
+          if (!invitationId) return false;
+          try {
+            const response = await fetch(
+              `${API_BASE}?action=verify-invitation-qr&invitation_id=${encodeURIComponent(invitationId)}`
+            );
+            const result = await response.json();
+            if (!response.ok || !result.success) {
+              throw new Error(result.error || result.message || "QR verification failed");
+            }
+            saveToken(result.data.token);
+            invitation = result.data;
+            applyInvitationState();
+            setAuthView(true);
+            await loadExistingRsvp();
+            return true;
+          } catch (error) {
+            showAccessDenied(
+              "This invitation link could not be verified. Please contact the couple for a valid RSVP link or QR code."
+            );
+            return false;
+          }
+        }
+
+        attendingSelect?.addEventListener("change", setAttendanceFields);
+
+        securedForm?.addEventListener("submit", async (event) => {
+          event.preventDefault();
+          setFeedback(submitFeedback, "", false);
+          attendingSelect?.removeAttribute("aria-invalid");
+
+          const formData = new FormData(securedForm);
+          const attending = String(formData.get("attending") || "").trim();
+          let attendeeCount = Number(formData.get("attendee_count") || 0);
+          const maxGuests = Number(invitation?.max_guests || 1);
+          let attendeeNames = String(formData.get("attendee_names") || "")
+            .split(/\r?\n/)
+            .map((name) => name.trim())
+            .filter(Boolean);
+          const hasInvitedGuestNames =
+            Array.isArray(invitation?.invited_guest_names) && invitation.invited_guest_names.length > 0;
+
+          if (!attending) {
+            attendingSelect?.setAttribute("aria-invalid", "true");
+            setFeedback(submitFeedback, "Please choose your attendance.", true);
+            return;
+          }
+
+          if (hasInvitedGuestNames) {
+            attendeeNames = getCheckedInvitedGuestNames();
+            attendeeCount = attendeeNames.length;
+            securedForm.elements.attendee_names.value = attendeeNames.join("\n");
+          }
+
+          if (attending === "yes") {
+            if (attendeeCount < 1 || attendeeCount > maxGuests) {
+              setFeedback(
+                submitFeedback,
+                `Please enter a guest count between 1 and ${maxGuests}.`,
+                true
+              );
+              return;
+            }
+            if (attendeeNames.length === 0) {
+              setFeedback(submitFeedback, "Please select at least one guest who will attend.", true);
+              return;
+            }
+          }
+
+          const attendees = attendeeNames.map((name) => ({ name }));
+
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.setAttribute("aria-busy", "true");
+          }
+
+          try {
+            await api("submit-rsvp", {
+              token: authToken,
+              attending,
+              attendee_count: attending === "yes" ? attendeeCount : 0,
+              attendees,
+              dietary_restrictions: String(formData.get("dietary_restrictions") || "").trim(),
+              special_notes: String(formData.get("special_notes") || "").trim(),
+            });
+            setFeedback(submitFeedback, "Thank you! Your RSVP has been received.", false);
+            securedForm.querySelectorAll("input, select, textarea, button").forEach((el) => {
+              el.disabled = true;
+            });
+            if (submitBtn) {
+              submitBtn.removeAttribute("aria-busy");
+              submitBtn.textContent = "RSVP received";
+            }
+          } catch (error) {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.removeAttribute("aria-busy");
+              submitBtn.textContent = "Submit RSVP";
+            }
+            setFeedback(submitFeedback, error.message, true);
+          }
+        });
+
+        const existingToken = getToken();
+        if (existingToken) {
+          hydrateFromToken(existingToken).then((ok) => {
+            if (!ok) {
+              clearToken();
+              loginViaQrInvitation(qrInvitationId);
+            }
+          });
+        } else if (qrInvitationId) {
+          loginViaQrInvitation(qrInvitationId);
+        } else {
+          showAccessDenied("");
+        }
+      })();
+    </script>
+  </body>
+</html>

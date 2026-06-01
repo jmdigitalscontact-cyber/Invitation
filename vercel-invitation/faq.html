@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1a1a1a" />
+    <meta name="description" content="Guest FAQ for Jason & Rhona Mae wedding â€” November 11, 2026." />
+    <title>FAQ | Jason & Rhona Mae</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="preload" href="./photos/photos/background.jpg" as="image" />
+  </head>
+  <body class="inner-page faq-page cinematic-page">
+    <div class="cinematic-backdrop" aria-hidden="true">
+      <div class="cinematic-backdrop__media">
+        <img
+          class="cinematic-backdrop__photo"
+          src="./photos/photos/bg-pages.jpg"
+          alt=""
+          width="3300"
+          height="2200"
+          decoding="async"
+          loading="eager"
+          fetchpriority="high"
+        />
+        <div class="cinematic-backdrop__shade" aria-hidden="true"></div>
+      </div>
+      <div class="cinematic-backdrop__frame" aria-hidden="true"></div>
+    </div>
+
+    <div class="book-shell">
+      <div class="book-stack">
+        <div class="page">
+          <nav class="site-nav" aria-label="Primary">
+            <a class="site-nav-link" href="./home.html">Home</a>
+            <a class="site-nav-link" href="./story.html">Our Story</a>
+            <a class="site-nav-link" href="./venues.html">Venues</a>
+            <a class="site-nav-link" href="./attire.html">Attire</a>
+            <a class="site-nav-link" href="./details.html">Details</a>
+            <a class="site-nav-link" href="./faq.html" aria-current="page">FAQ</a>
+            <a class="site-nav-link site-nav-link-rsvp" href="./rsvp.html">RSVP</a>
+          </nav>
+          <main class="page-shell">
+            <header class="page-intro">
+              <p class="page-intro-eyebrow">FAQ</p>
+              <h1 class="page-intro-title">Questions &amp; Answers</h1>
+              <p class="page-intro-lead">Everything you might wonder before the big day.</p>
+            </header>
+            <section class="section">
+              <div class="faq-list">
+                <details id="rsvp">
+                  <summary>How do I RSVP?</summary>
+                  <p>
+                    Use the QR code or personal link on your invitation. If you need help,
+                    please contact the couple directly.
+                  </p>
+                </details>
+                <details>
+                  <summary>Is RSVP required?</summary>
+                  <p>
+                    Yes, RSVP is strictly required and seats are reserved in advance. Please
+                    respond as soon as possible so final headcount can be prepared.
+                  </p>
+                </details>
+                <details>
+                  <summary>Can I bring a plus one?</summary>
+                  <p>No. This event is strictly by invitation only and limited to listed guests.</p>
+                </details>
+                <details>
+                  <summary>What time should I arrive?</summary>
+                  <p>The ceremony starts at 2:00 PM sharp at St. John Marie Vianney Parish Church. Please arrive early.</p>
+                </details>
+                <details>
+                  <summary>Can I take photos during the ceremony?</summary>
+                  <p>
+                    The ceremony is unplugged. Please enjoy the moment and leave coverage to the
+                    photo/video team.
+                  </p>
+                </details>
+                <details>
+                  <summary>Are kids allowed?</summary>
+                  <p>Only children specifically requested by the couple are included.</p>
+                </details>
+                <details>
+                  <summary>Parking and directions?</summary>
+                  <p>
+                    Church parking is available near St. John Marie Vianney Parish in Lalaan II,
+                    Silang. For the reception, follow venue staff directions at Alta Terra Tagaytay.
+                    Tagaytay weather is often cooler â€” bring a light jacket.
+                  </p>
+                </details>
+              </div>
+            </section>
+          </main>
+        </div>
+      </div>
+    </div>
+    <div id="wedding-audio-player" data-turbo-permanent>
+      <audio id="wedding-music" loop preload="none">
+        <source src="./audio/ambient.mp3" type="audio/mpeg" />
+      </audio>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.13/dist/turbo.es2017-umd.min.js"></script>
+    <script src="./static-preview.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>
