@@ -15,12 +15,14 @@ This folder is a **preview-only** copy of the invitation site for showing client
 
 ## Deploy to Vercel
 
-1. Create a new Vercel project.
+1. Create a new Vercel project and connect this repo.
 2. Set **Root Directory** to `vercel-invitation` (if the repo root is the parent folder).
-3. Framework preset: **Other** (static â€” no build command).
-4. Deploy.
+3. **Framework Preset:** Other (static).
+4. **Build Command:** leave empty.
+5. **Output Directory:** leave empty.
+6. Deploy.
 
-Or deploy only this folder as its own repo.
+No `vercel.json` is required for this static site.
 
 ## Local preview
 
