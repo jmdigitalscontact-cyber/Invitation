@@ -737,6 +737,12 @@ function attachMusicInteractionFallback() {
 }
 
 function initMusicToggle() {
+  if (window.__WEDDING_STATIC_PREVIEW__ === true) {
+    document.querySelectorAll(".music-toggle").forEach((el) => el.remove());
+    musicToggleButton = null;
+    return;
+  }
+
   const playerRoot = document.getElementById("wedding-audio-player");
   if (playerRoot?.querySelector(".music-toggle")) {
     musicToggleButton = playerRoot.querySelector(".music-toggle");

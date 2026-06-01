@@ -5,6 +5,14 @@
   "use strict";
 
   window.__WEDDING_STATIC_PREVIEW__ = true;
+  document.documentElement.classList.add("wedding-static-preview");
+
+  function removeMusicToggleUi() {
+    document.querySelectorAll(".music-toggle").forEach((el) => el.remove());
+  }
+
+  removeMusicToggleUi();
+  document.addEventListener("turbo:load", removeMusicToggleUi);
 
   if (sessionStorage.getItem("wedding-music-muted") !== "1") {
     sessionStorage.setItem("wedding-music-was-playing", "1");

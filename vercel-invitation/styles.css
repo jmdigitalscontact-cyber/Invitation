@@ -3990,6 +3990,10 @@ button:not(.index-open-btn):not(.real-env-seal):hover {
   pointer-events: auto;
 }
 
+html.wedding-static-preview .music-toggle {
+  display: none !important;
+}
+
 .music-toggle {
   position: fixed;
   bottom: 1rem;
