@@ -7,50 +7,12 @@
   window.__WEDDING_STATIC_PREVIEW__ = true;
   document.documentElement.classList.add("wedding-static-preview");
 
-  const PREVIEW_MUSIC_KEYS = [
-    "wedding-music-muted",
-    "wedding-music-started",
-    "wedding-music-time",
-    "wedding-music-was-playing",
-  ];
-  const PREVIEW_INTRO_KEYS = ["wedding-intro-seen", "wedding-intro-handoff"];
+  if (window.__WEDDING_RELOAD_REDIRECTING__) return;
 
-  function isPageReload() {
-    const nav = performance.getEntriesByType?.("navigation")?.[0];
-    if (nav?.type === "reload") return true;
-    return performance.navigation?.type === 1;
-  }
-
-  function isIndexPage() {
-    const segment = window.location.pathname.split("/").filter(Boolean).pop() || "";
-    const name = segment.toLowerCase();
-    return !name || name === "index.html";
-  }
-
-  function resetPreviewMusicAndIntro() {
-    PREVIEW_MUSIC_KEYS.concat(PREVIEW_INTRO_KEYS).forEach((key) => {
-      sessionStorage.removeItem(key);
-    });
-    sessionStorage.removeItem("page-turn-enter-direction");
-
-    const audio = document.getElementById("wedding-music");
-    if (audio) {
-      audio.pause();
-      audio.currentTime = 0;
+  if (!window.WeddingInvitationReload?.isPageReload?.()) {
+    if (sessionStorage.getItem("wedding-music-muted") !== "1") {
+      sessionStorage.setItem("wedding-music-was-playing", "1");
     }
-  }
-
-  if (isPageReload()) {
-    resetPreviewMusicAndIntro();
-    if (!isIndexPage()) {
-      const indexUrl = new URL("./index.html", window.location.href);
-      const invite = new URLSearchParams(window.location.search).get("invite");
-      if (invite) indexUrl.searchParams.set("invite", invite);
-      window.location.replace(indexUrl.pathname + indexUrl.search);
-      return;
-    }
-  } else if (sessionStorage.getItem("wedding-music-muted") !== "1") {
-    sessionStorage.setItem("wedding-music-was-playing", "1");
   }
 
   function removeMusicToggleUi() {

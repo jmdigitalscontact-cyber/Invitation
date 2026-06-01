@@ -36,6 +36,7 @@ foreach ($file in $htmlFiles) {
 
 Copy-Item (Join-Path $root "styles.css") $dest
 Copy-Item (Join-Path $root "script.js") $dest
+Copy-Item (Join-Path $root "invitation-reload.js") $dest
 
 if (Test-Path (Join-Path $root "photos")) {
     Copy-Item (Join-Path $root "photos") (Join-Path $dest "photos") -Recurse
@@ -53,10 +54,16 @@ foreach ($name in $preserve.Keys) {
 
 Get-ChildItem (Join-Path $dest "*.html") | ForEach-Object {
     $content = Get-Content $_.FullName -Raw
-    if ($content -notmatch "static-preview\.js") {
-        $content = $content -replace '<script src="\./script\.js"></script>', "<script src=`"./static-preview.js`"></script>`r`n    <script src=`"./script.js`"></script>"
+    if ($content -notmatch "invitation-reload\.js") {
+        if ($content -match "static-preview\.js") {
+            $content = $content -replace '<script src="\./static-preview\.js"></script>', "<script src=`"./invitation-reload.js`"></script>`r`n    <script src=`"./static-preview.js`"></script>"
+        } else {
+            $content = $content -replace '<script src="\./script\.js"></script>', "<script src=`"./invitation-reload.js`"></script>`r`n    <script src=`"./script.js`"></script>"
+        }
     }
-    $content = $content -replace '</script>\s*<script src="\./static-preview\.js">', "</script>`r`n    <script src=`"./static-preview.js`">"
+    if ($content -notmatch "static-preview\.js") {
+        $content = $content -replace '(<script src="\./invitation-reload\.js"></script>\s*)<script src="\./script\.js"></script>', "`$1<script src=`"./static-preview.js`"></script>`r`n    <script src=`"./script.js`"></script>"
+    }
     [System.IO.File]::WriteAllText($_.FullName, $content)
 }
 

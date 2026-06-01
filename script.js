@@ -33,6 +33,11 @@ const musicMutedKey = "wedding-music-muted";
 const musicStartedKey = "wedding-music-started";
 const musicTimeKey = "wedding-music-time";
 const musicWasPlayingKey = "wedding-music-was-playing";
+
+function canRunWeddingInit() {
+  return window.__WEDDING_RELOAD_REDIRECTING__ !== true;
+}
+
 const bookPageOrder = [
   "/story.html",
   "/venues.html",
@@ -1311,26 +1316,28 @@ function updateCountdown() {
   lastCountdownSecond = second;
 }
 
-updateCountdown();
-setInterval(updateCountdown, 1000);
-syncQrInviteContext();
+if (canRunWeddingInit()) {
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+  syncQrInviteContext();
 
-if (introScreen && shouldSkipIntroOnLoad()) {
-  navigateToInvitationHome({ instant: true });
+  if (introScreen && shouldSkipIntroOnLoad()) {
+    navigateToInvitationHome({ instant: true });
+  }
+
+  skipIntroLink?.addEventListener("click", (event) => {
+    event.preventDefault();
+    navigateToInvitationHome();
+  });
+
+  openInvitationButton?.addEventListener("click", startEnvelopeOpen);
+  envelopeHitTarget?.addEventListener("click", startEnvelopeOpen);
+
+  viewInvitationButton?.addEventListener("click", (event) => {
+    event.preventDefault();
+    navigateToInvitationHome();
+  });
 }
-
-skipIntroLink?.addEventListener("click", (event) => {
-  event.preventDefault();
-  navigateToInvitationHome();
-});
-
-openInvitationButton?.addEventListener("click", startEnvelopeOpen);
-envelopeHitTarget?.addEventListener("click", startEnvelopeOpen);
-
-viewInvitationButton?.addEventListener("click", (event) => {
-  event.preventDefault();
-  navigateToInvitationHome();
-});
 
 function onTurboPageLoad() {
   syncWeddingAudioRef();
@@ -1343,6 +1350,7 @@ function onTurboPageLoad() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
+  if (!canRunWeddingInit()) return;
   resetIndexIntroState();
   initAppShell();
   if (!window.Turbo) {
@@ -1352,6 +1360,7 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 
 window.addEventListener("pageshow", (event) => {
+  if (!canRunWeddingInit()) return;
   const pageCard = document.querySelector(".page");
   const enterDirection = sessionStorage.getItem("page-turn-enter-direction");
   sessionStorage.removeItem("page-turn-enter-direction");
@@ -1866,7 +1875,7 @@ function initAppShell() {
   markRsvpLinksTurboOptOut();
 }
 
-if (!window.__weddingTurboLifecycleBound) {
+if (canRunWeddingInit() && !window.__weddingTurboLifecycleBound) {
   window.__weddingTurboLifecycleBound = true;
 
   document.addEventListener("turbo:before-visit", () => {
@@ -1884,7 +1893,9 @@ if (!window.__weddingTurboLifecycleBound) {
   document.addEventListener("turbo:load", onTurboPageLoad);
 }
 
-const scrollTopButton = document.getElementById("scroll-top");
-scrollTopButton?.addEventListener("click", () => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
+if (canRunWeddingInit()) {
+  const scrollTopButton = document.getElementById("scroll-top");
+  scrollTopButton?.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+}
