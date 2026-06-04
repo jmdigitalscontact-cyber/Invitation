@@ -1,5 +1,5 @@
-﻿/**
- * Static client preview â€” no PHP/database. Intercepts RSVP API calls with demo data.
+/**
+ * Static client preview — no PHP/database. Intercepts RSVP API calls with demo data.
  */
 (function () {
   "use strict";
@@ -95,7 +95,7 @@
       case "submit-rsvp":
         return jsonResponse({
           success: true,
-          message: "Preview only â€” your response was not saved to a server.",
+          message: "Preview only — your response was not saved to a server.",
         });
 
       default:
@@ -128,7 +128,7 @@
     bar.id = "static-preview-banner";
     bar.setAttribute("role", "status");
     bar.innerHTML =
-      '<p><strong>Client preview</strong> â€” Design &amp; flow only. RSVP is simulated (nothing is saved). Full site needs PHP + PostgreSQL hosting.</p>' +
+      '<p><strong>Client preview</strong> — Design &amp; flow only. RSVP is simulated (nothing is saved). Full site needs PHP + PostgreSQL hosting.</p>' +
       '<a href="./rsvp.html?invite=PREVIEW">Try RSVP demo</a>';
 
     const style = document.createElement("style");

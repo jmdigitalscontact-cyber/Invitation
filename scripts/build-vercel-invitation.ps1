@@ -5,15 +5,16 @@ $ErrorActionPreference = "Stop"
 $root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $dest = Join-Path $root "vercel-invitation"
 $templateDir = $dest
+$utf8NoBom = New-Object System.Text.UTF8Encoding $false
 
 Write-Host "Building static preview at: $dest"
 
-# Preserve preview-only files before wipe
+# Preserve preview-only files before wipe (UTF-8 — avoid Windows-1252 mojibake)
 $preserve = @{}
 foreach ($name in @("static-preview.js", "README.md")) {
     $path = Join-Path $templateDir $name
     if (Test-Path $path) {
-        $preserve[$name] = Get-Content $path -Raw
+        $preserve[$name] = [System.IO.File]::ReadAllText($path, $utf8NoBom)
     }
 }
 
@@ -53,11 +54,11 @@ if (Test-Path (Join-Path $root "partials")) {
 }
 
 foreach ($name in $preserve.Keys) {
-    Set-Content -Path (Join-Path $dest $name) -Value $preserve[$name] -NoNewline -Encoding utf8
+    [System.IO.File]::WriteAllText((Join-Path $dest $name), $preserve[$name], $utf8NoBom)
 }
 
 Get-ChildItem (Join-Path $dest "*.html") | ForEach-Object {
-    $content = Get-Content $_.FullName -Raw
+    $content = [System.IO.File]::ReadAllText($_.FullName, $utf8NoBom)
     if ($content -notmatch "invitation-reload\.js") {
         if ($content -match "static-preview\.js") {
             $content = $content -replace '<script src="\./static-preview\.js"></script>', "<script src=`"./invitation-reload.js`"></script>`r`n    <script src=`"./static-preview.js`"></script>"
@@ -68,7 +69,7 @@ Get-ChildItem (Join-Path $dest "*.html") | ForEach-Object {
     if ($content -notmatch "static-preview\.js") {
         $content = $content -replace '(<script src="\./invitation-reload\.js"></script>\s*)<script src="\./script\.js"></script>', "`$1<script src=`"./static-preview.js`"></script>`r`n    <script src=`"./script.js`"></script>"
     }
-    [System.IO.File]::WriteAllText($_.FullName, $content)
+    [System.IO.File]::WriteAllText($_.FullName, $content, $utf8NoBom)
 }
 
 Write-Host "Done. Deploy the vercel-invitation folder to Vercel."

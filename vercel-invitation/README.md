@@ -1,4 +1,4 @@
-﻿# Wedding invitation â€” static client preview
+# Wedding invitation â€” static client preview
 
 This folder is a **preview-only** copy of the invitation site for showing clients on **Vercel** (or Netlify, GitHub Pages, etc.) **before** you buy a domain or PHP hosting.
 
