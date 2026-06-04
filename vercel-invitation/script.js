@@ -283,11 +283,43 @@ function navigateToUrl(url, options = {}) {
 }
 
 const parts = {
-  days: document.getElementById("days"),
-  hours: document.getElementById("hours"),
-  minutes: document.getElementById("minutes"),
-  seconds: document.getElementById("seconds"),
+  days: null,
+  hours: null,
+  minutes: null,
+  seconds: null,
 };
+
+function bindCountdownParts() {
+  const days = document.getElementById("days");
+  const hours = document.getElementById("hours");
+  const minutes = document.getElementById("minutes");
+  const seconds = document.getElementById("seconds");
+
+  if (!days || !hours || !minutes || !seconds) {
+    parts.days = null;
+    parts.hours = null;
+    parts.minutes = null;
+    parts.seconds = null;
+    return false;
+  }
+
+  if (parts.seconds !== seconds) {
+    lastCountdownSecond = null;
+  }
+
+  parts.days = days;
+  parts.hours = hours;
+  parts.minutes = minutes;
+  parts.seconds = seconds;
+  return true;
+}
+
+function startCountdownClock() {
+  if (!bindCountdownParts()) return;
+  updateCountdown();
+  if (window.__weddingCountdownIntervalId != null) return;
+  window.__weddingCountdownIntervalId = window.setInterval(updateCountdown, 1000);
+}
 
 function normalizePath(pathname) {
   if (!pathname || pathname === "/") return "/index.html";
@@ -1377,7 +1409,7 @@ function initSmoothScrollEffect() {
 let lastCountdownSecond = null;
 
 function updateCountdown() {
-  if (!parts.days || !parts.hours || !parts.minutes || !parts.seconds) return;
+  if (!bindCountdownParts()) return;
   const now = Date.now();
   const gap = Math.max(0, targetDate - now);
 
@@ -1401,8 +1433,7 @@ function updateCountdown() {
 }
 
 if (canRunWeddingInit()) {
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
+  startCountdownClock();
   syncQrInviteContext();
 
   if (introScreen && shouldSkipIntroOnLoad()) {
@@ -1428,6 +1459,7 @@ function onTurboPageLoad() {
   initAppShell();
   syncQrInviteContext();
   initCurrentPage();
+  startCountdownClock();
   if (!isMusicMuted()) {
     ensureContinuousMusic();
   }
@@ -1440,6 +1472,7 @@ window.addEventListener("DOMContentLoaded", () => {
   if (!window.Turbo) {
     syncQrInviteContext();
     initCurrentPage();
+    startCountdownClock();
   }
 });
 
@@ -1469,6 +1502,8 @@ window.addEventListener("pageshow", (event) => {
     document.body.classList.remove("intro-active");
   }
   document.body.classList.remove("page-exit");
+
+  startCountdownClock();
 
   if (event.persisted) {
     if (!pageCard && !hasHomeIntroHandoff()) {
@@ -1949,6 +1984,10 @@ function initCurrentPage() {
   initAttirePhotoLightbox();
   updateMobileNavActivePage();
   markRsvpLinksTurboOptOut();
+
+  if (document.body.classList.contains("home-page")) {
+    startCountdownClock();
+  }
 
   if (!hasHomeIntroHandoff()) {
     document.body.classList.add("page-enter");
