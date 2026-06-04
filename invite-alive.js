@@ -128,180 +128,36 @@
     });
   }
 
-  let burgerLastFocus = null;
-
-  function staggerBurgerLinks(menu) {
-    menu?.querySelectorAll(".site-nav-link").forEach((link, index) => {
-      link.style.setProperty("--nav-stagger", `${index * 0.055}s`);
-    });
-  }
-
-  function closeBurgerMenu() {
-    const overlay = document.getElementById("invite-nav-overlay");
-    const burger = document.querySelector(".invite-nav-burger");
-    if (!overlay) return;
-
-    overlay.hidden = true;
-    overlay.classList.remove("is-open", "is-animating");
-    document.body.classList.remove("invite-nav-open");
-    burger?.setAttribute("aria-expanded", "false");
-
-    const restore = burgerLastFocus;
-    burgerLastFocus = null;
-    if (restore && typeof restore.focus === "function") {
-      restore.focus({ preventScroll: true });
-    } else {
-      burger?.focus({ preventScroll: true });
-    }
-  }
-
-  function openBurgerMenu() {
-    const overlay = document.getElementById("invite-nav-overlay");
-    const burger = document.querySelector(".invite-nav-burger");
-    if (!overlay || !burger) return;
-
-    burgerLastFocus = document.activeElement;
-    overlay.hidden = false;
-    overlay.classList.remove("is-animating");
-    requestAnimationFrame(() => {
-      overlay.classList.add("is-open");
-      requestAnimationFrame(() => overlay.classList.add("is-animating"));
-    });
-    document.body.classList.add("invite-nav-open");
-    burger.setAttribute("aria-expanded", "true");
-    const first = overlay.querySelector(".invite-nav-menu .site-nav-link");
-    first?.focus({ preventScroll: true });
-  }
-
-  function syncBurgerMenuLinks(siteNav, menu) {
-    if (!siteNav || !menu) return;
-    menu.innerHTML = "";
-    siteNav.querySelectorAll(".site-nav-link").forEach((link) => {
-      menu.appendChild(link.cloneNode(true));
-    });
-  }
-
-  function teardownBurgerNav() {
-    closeBurgerMenu();
+  function teardownLegacyMobileNav() {
     document.getElementById("invite-nav-overlay")?.remove();
     document.querySelector(".invite-nav-bar")?.remove();
+    document.body.classList.remove("invite-nav-open");
   }
 
-  function bindBurgerNavEvents(overlay, burger) {
-    if (overlay.dataset.bound === "1") return;
-    overlay.dataset.bound = "1";
+  function ensureNavDockAnchor(siteNav) {
+    if (siteNav._dockAnchor?.parentNode) return siteNav._dockAnchor;
+    const anchor = document.createComment("invite-site-nav-anchor");
+    siteNav.parentNode?.insertBefore(anchor, siteNav);
+    siteNav._dockAnchor = anchor;
+    return anchor;
+  }
 
-    overlay.addEventListener("click", (event) => {
-      const target = event.target;
-      if (!(target instanceof Element)) return;
-      if (target.classList.contains("invite-nav-overlay__backdrop")) {
-        closeBurgerMenu();
-      }
-    });
+  function dockSiteNav(siteNav) {
+    ensureNavDockAnchor(siteNav);
+    siteNav.classList.add("site-nav--dock");
+    document.body.appendChild(siteNav);
+  }
 
-    overlay.querySelector(".invite-nav-close")?.addEventListener("click", closeBurgerMenu);
-
-    overlay.querySelector(".invite-nav-menu")?.addEventListener("click", (event) => {
-      if (event.target.closest(".site-nav-link")) {
-        closeBurgerMenu();
-      }
-    });
-
-    burger.addEventListener("click", () => {
-      if (overlay.classList.contains("is-open")) {
-        closeBurgerMenu();
-      } else {
-        openBurgerMenu();
-      }
-    });
-
-    if (!document.body.dataset.inviteBurgerKeybound) {
-      document.body.dataset.inviteBurgerKeybound = "1";
-      document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-          closeBurgerMenu();
-        }
-      });
-      mobileNavMq.addEventListener("change", () => {
-        if (!mobileNavMq.matches) {
-          closeBurgerMenu();
-        }
-      });
+  function undockSiteNav(siteNav) {
+    const anchor = siteNav._dockAnchor;
+    siteNav.classList.remove("site-nav--dock");
+    if (anchor?.parentNode) {
+      anchor.parentNode.insertBefore(siteNav, anchor.nextSibling);
     }
-  }
-
-  function initBurgerNav() {
-    if (!document.body.classList.contains("invite-alive")) return;
-
-    const siteNav = document.querySelector(".site-nav");
-    if (!siteNav) return;
-
-    teardownBurgerNav();
-
-    const bar = document.createElement("div");
-    bar.className = "invite-nav-bar";
-
-    const currentLabel = document.createElement("p");
-    currentLabel.className = "invite-nav-bar__current";
-    currentLabel.textContent =
-      siteNav.querySelector(".site-nav-link[aria-current='page']")?.textContent?.trim() ||
-      "Invitation";
-
-    const burger = document.createElement("button");
-    burger.type = "button";
-    burger.className = "invite-nav-burger";
-    burger.setAttribute("aria-expanded", "false");
-    burger.setAttribute("aria-controls", "invite-nav-menu");
-    burger.setAttribute("aria-label", "Open menu");
-    burger.innerHTML =
-      '<span class="invite-nav-burger__bars" aria-hidden="true">' +
-      "<span></span><span></span><span></span></span>" +
-      '<span class="invite-nav-burger__label">Menu</span>';
-
-    bar.classList.add("motion-enter");
-    bar.append(currentLabel, burger);
-    siteNav.insertAdjacentElement("beforebegin", bar);
-
-    const overlay = document.createElement("div");
-    overlay.className = "invite-nav-overlay";
-    overlay.id = "invite-nav-overlay";
-    overlay.hidden = true;
-
-    const backdrop = document.createElement("button");
-    backdrop.type = "button";
-    backdrop.className = "invite-nav-overlay__backdrop";
-    backdrop.setAttribute("aria-label", "Close menu");
-    backdrop.tabIndex = -1;
-
-    const panel = document.createElement("div");
-    panel.className = "invite-nav-overlay__panel";
-    panel.setAttribute("role", "dialog");
-    panel.setAttribute("aria-modal", "true");
-    panel.setAttribute("aria-label", "Site menu");
-
-    const closeBtn = document.createElement("button");
-    closeBtn.type = "button";
-    closeBtn.className = "invite-nav-close";
-    closeBtn.setAttribute("aria-label", "Close menu");
-    closeBtn.innerHTML = "<span aria-hidden=\"true\">&times;</span>";
-
-    const menu = document.createElement("nav");
-    menu.className = "invite-nav-menu";
-    menu.id = "invite-nav-menu";
-    menu.setAttribute("aria-label", "Primary");
-
-    syncBurgerMenuLinks(siteNav, menu);
-    staggerBurgerLinks(menu);
-    panel.append(closeBtn, menu);
-    overlay.append(backdrop, panel);
-    document.body.appendChild(overlay);
-
-    bindBurgerNavEvents(overlay, burger);
   }
 
   function scrollNavToCurrent() {
-    if (mobileNavMq.matches) return;
-    const nav = document.querySelector(".invite-alive .site-nav");
+    const nav = document.querySelector(".invite-alive .site-nav, .site-nav--dock");
     const current = nav?.querySelector(".site-nav-link[aria-current='page']");
     if (!nav || !current) return;
 
@@ -311,6 +167,37 @@
       left: Math.max(0, target),
       behavior: reducedMotion ? "auto" : "smooth",
     });
+  }
+
+  function initMobileBottomNav() {
+    if (!document.body.classList.contains("invite-alive")) return;
+
+    const siteNav = document.querySelector(".site-nav");
+    if (!siteNav) return;
+
+    teardownLegacyMobileNav();
+
+    if (mobileNavMq.matches) {
+      dockSiteNav(siteNav);
+      requestAnimationFrame(() => scrollNavToCurrent());
+    } else {
+      undockSiteNav(siteNav);
+    }
+
+    if (!document.body.dataset.inviteNavDockBound) {
+      document.body.dataset.inviteNavDockBound = "1";
+      mobileNavMq.addEventListener("change", () => {
+        const nav = document.querySelector(".site-nav");
+        if (!nav) return;
+        if (mobileNavMq.matches) {
+          dockSiteNav(nav);
+          requestAnimationFrame(() => scrollNavToCurrent());
+        } else {
+          undockSiteNav(nav);
+          requestAnimationFrame(() => scrollNavToCurrent());
+        }
+      });
+    }
   }
 
   function initMotionReveal() {
@@ -394,7 +281,7 @@
   function onReady() {
     initPetals();
     initInnerChrome();
-    initBurgerNav();
+    initMobileBottomNav();
     initMotionReveal();
     markPageReady();
     requestAnimationFrame(scrollNavToCurrent);
@@ -402,5 +289,5 @@
 
   document.addEventListener("DOMContentLoaded", onReady);
   document.addEventListener("turbo:load", onReady);
-  document.addEventListener("turbo:before-visit", closeBurgerMenu);
+  document.addEventListener("turbo:before-visit", teardownLegacyMobileNav);
 })();

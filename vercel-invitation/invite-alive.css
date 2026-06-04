@@ -29,6 +29,7 @@
   --safe-b: env(safe-area-inset-bottom, 0px);
   --safe-l: env(safe-area-inset-left, 0px);
   --touch-min: 44px;
+  --mobile-nav-dock-h: 3.75rem;
 }
 
 *,
@@ -713,9 +714,9 @@ body.invite-alive.home-page {
   color: #fff;
 }
 
-/* Mobile: burger + drawer; desktop: horizontal site-nav */
+/* Legacy burger UI (removed on mobile — kept hidden) */
 .invite-nav-bar {
-  display: none;
+  display: none !important;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
@@ -900,13 +901,79 @@ body.invite-nav-open {
   overflow: hidden;
 }
 
+#invite-nav-overlay {
+  display: none !important;
+}
+
+/* Mobile: sticky bottom navigation dock */
 @media (max-width: 767px) {
-  .invite-alive .invite-nav-bar {
-    display: flex;
+  body.invite-alive.home-page,
+  body.invite-alive.inner-page {
+    padding-bottom: calc(var(--mobile-nav-dock-h) + var(--safe-b) + 0.35rem);
   }
 
-  .invite-alive .site-nav {
-    display: none !important;
+  body.invite-alive .music-toggle {
+    bottom: calc(var(--mobile-nav-dock-h) + var(--safe-b) + 0.55rem);
+    z-index: 210;
+  }
+
+  .invite-alive .site-nav.site-nav--dock {
+    --nav-fade: 16px;
+    display: flex !important;
+    position: fixed;
+    transform: translateZ(0);
+    left: max(0.35rem, var(--safe-l));
+    right: max(0.35rem, var(--safe-r));
+    bottom: 0;
+    z-index: 200;
+    margin: 0;
+    width: auto;
+    max-width: none;
+    padding: 0.38rem 0.4rem calc(0.42rem + var(--safe-b));
+    border-radius: 20px 20px 0 0;
+    border-bottom: none;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0.28rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: 0.4rem;
+    scrollbar-width: none;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(139, 168, 142, 0.32);
+    border-bottom: none;
+    box-shadow:
+      0 -10px 32px rgba(61, 74, 64, 0.14),
+      0 -2px 0 rgba(184, 146, 58, 0.12);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 var(--nav-fade),
+      #000 calc(100% - var(--nav-fade)),
+      transparent
+    );
+  }
+
+  .invite-alive .site-nav.site-nav--dock::-webkit-scrollbar {
+    display: none;
+    height: 0;
+  }
+
+  .invite-alive .site-nav.site-nav--dock .site-nav-link {
+    flex: 0 0 auto;
+    font-size: 0.64rem;
+    padding: 0.42rem 0.58rem;
+    min-height: 38px;
+    scroll-snap-align: center;
+  }
+
+  .invite-alive .home-shell.invite-card,
+  .invite-alive.inner-page .book-shell {
+    margin-bottom: max(1.5rem, calc(var(--safe-b) + 0.5rem));
   }
 }
 
@@ -914,6 +981,13 @@ body.invite-nav-open {
   .invite-nav-bar,
   #invite-nav-overlay {
     display: none !important;
+  }
+
+  .invite-alive .site-nav.site-nav--dock {
+    position: static;
+    mask-image: none;
+    box-shadow: none;
+    backdrop-filter: none;
   }
 }
 
@@ -1554,7 +1628,8 @@ body.invite-nav-open {
   }
 
   .invite-nav-overlay__panel,
-  .invite-nav-overlay__backdrop {
+  .invite-nav-overlay__backdrop,
+  .invite-alive .site-nav.site-nav--dock {
     transition: none;
   }
 }
@@ -2303,6 +2378,7 @@ body.invite-nav-open {
 body.invite-alive .music-toggle {
   right: max(0.85rem, var(--safe-r));
   bottom: max(0.85rem, var(--safe-b));
+  z-index: 210;
 }
 
 /* Tablet */
@@ -2588,22 +2664,6 @@ body.invite-alive .music-toggle {
   transform: translate3d(0, 0, 0) scale(1);
 }
 
-.invite-alive .invite-nav-bar.motion-enter {
-  opacity: 0;
-  transform: translate3d(0, -12px, 0);
-  transition:
-    opacity var(--motion-fast) var(--ease-out),
-    transform var(--motion-fast) var(--ease-out);
-  transition-delay: 0.04s;
-}
-
-.invite-alive.is-ready .invite-nav-bar.motion-enter,
-.invite-alive.invite-alive-ready .invite-nav-bar.motion-enter,
-.invite-alive.inner-page.is-ready .invite-nav-bar.motion-enter {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-}
-
 .invite-alive.home-page.is-ready .home-photo-frame,
 .invite-alive.home-page.invite-alive-ready .home-photo-frame {
   animation: invite-photo-settle 0.88s var(--ease-out) 0.32s backwards;
@@ -2765,13 +2825,27 @@ body.invite-alive.inner-page {
   color: var(--ink);
 }
 
-body.invite-alive.home-page .site-nav,
-body.invite-alive.inner-page .site-nav {
+body.invite-alive.home-page .site-nav:not(.site-nav--dock),
+body.invite-alive.inner-page .site-nav:not(.site-nav--dock) {
   background: rgba(255, 255, 255, 0.55);
   border: 1px solid rgba(139, 168, 142, 0.28);
   border-radius: 16px;
   box-shadow: none;
   backdrop-filter: none;
+}
+
+@media (max-width: 767px) {
+  body.invite-alive.home-page .site-nav.site-nav--dock,
+  body.invite-alive.inner-page .site-nav.site-nav--dock {
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(139, 168, 142, 0.32);
+    border-bottom: none;
+    border-radius: 20px 20px 0 0;
+    box-shadow:
+      0 -10px 32px rgba(61, 74, 64, 0.14),
+      0 -2px 0 rgba(184, 146, 58, 0.12);
+    backdrop-filter: blur(14px);
+  }
 }
 
 body.invite-alive.home-page .site-nav-link,

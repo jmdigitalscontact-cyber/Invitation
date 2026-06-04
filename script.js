@@ -1003,8 +1003,7 @@ function initHomeEnter() {
   if (!document.body.classList.contains("home-page")) return;
 
   const targets = [
-    document.querySelector(".home-page .invite-nav-bar"),
-    document.querySelector(".home-page .site-nav"),
+    document.querySelector(".site-nav"),
     document.querySelector(".home-page .hero"),
     document.querySelector(".home-page main"),
     document.querySelector(".home-page .home-signoff"),
@@ -1035,8 +1034,7 @@ function initInnerPageEnter() {
   const introInsideShell = Boolean(pageIntro && pageShell?.contains(pageIntro));
 
   const targets = [
-    document.querySelector(".inner-page .invite-nav-bar"),
-    document.querySelector(".inner-page .site-nav"),
+    document.querySelector(".site-nav"),
     introInsideShell ? null : pageIntro,
     pageShell,
     document.querySelector(".inner-page .venues-main"),
