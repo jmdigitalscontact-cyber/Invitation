@@ -11,7 +11,7 @@ Write-Host "Building static preview at: $dest"
 
 # Preserve preview-only files before wipe (UTF-8 — avoid Windows-1252 mojibake)
 $preserve = @{}
-foreach ($name in @("static-preview.js", "README.md")) {
+foreach ($name in @("static-preview.js", "README.md", "vercel.json")) {
     $path = Join-Path $templateDir $name
     if (Test-Path $path) {
         $preserve[$name] = [System.IO.File]::ReadAllText($path, $utf8NoBom)
