@@ -35,6 +35,10 @@ foreach ($file in $htmlFiles) {
 }
 
 Copy-Item (Join-Path $root "styles.css") $dest
+Copy-Item (Join-Path $root "invite-alive.css") $dest
+Copy-Item (Join-Path $root "intro.css") $dest
+Copy-Item (Join-Path $root "invite-alive.js") $dest
+Copy-Item (Join-Path $root "intro.js") $dest
 Copy-Item (Join-Path $root "script.js") $dest
 Copy-Item (Join-Path $root "invitation-reload.js") $dest
 

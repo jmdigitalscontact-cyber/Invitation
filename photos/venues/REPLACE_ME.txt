@@ -1,0 +1,5 @@
+Add your venue photos here:
+- ceremony.jpg — church / ceremony venue photo
+- reception.jpg — reception venue photo
+
+These filenames are used by venues.html.

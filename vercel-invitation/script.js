@@ -627,10 +627,13 @@ function getWeddingAudio() {
     shouldPreload &&
     weddingAudio.preload === "none" &&
     weddingAudio.paused &&
+    !weddingAudio.ended &&
     weddingAudio.readyState < 2
   ) {
     weddingAudio.preload = "auto";
-    weddingAudio.load();
+    if (weddingAudio.readyState < 1) {
+      weddingAudio.load();
+    }
   }
 
   const savedTime = Number(sessionStorage.getItem(musicTimeKey) || "0");
@@ -676,6 +679,42 @@ function persistMusicPlaybackState() {
   sessionStorage.setItem(musicWasPlayingKey, isPlaying ? "1" : "0");
 }
 
+/** Keep music intent across Turbo navigations and full reloads (until tab close or mute). */
+function lockContinuousPlayback() {
+  sessionStorage.setItem(musicMutedKey, "0");
+  sessionStorage.setItem(musicStartedKey, "1");
+  sessionStorage.setItem(musicWasPlayingKey, "1");
+  persistMusicPlaybackState();
+}
+
+function startMusicProgressSaver() {
+  if (window.__weddingMusicProgressInterval) return;
+  window.__weddingMusicProgressInterval = window.setInterval(() => {
+    if (isMusicMuted()) return;
+    syncWeddingAudioRef();
+    const audio = weddingAudio || document.getElementById("wedding-music");
+    if (audio && !audio.paused && !audio.ended) {
+      persistMusicPlaybackState();
+    }
+  }, 2000);
+}
+
+async function ensureContinuousMusic() {
+  if (isMusicMuted()) return false;
+  if (sessionStorage.getItem(musicStartedKey) === "1") {
+    sessionStorage.setItem(musicWasPlayingKey, "1");
+  }
+  syncWeddingAudioRef();
+  const audio = getWeddingAudio();
+  if (!audio.paused && !audio.ended) {
+    persistMusicPlaybackState();
+    updateMusicToggleUi();
+    return true;
+  }
+  if (sessionStorage.getItem(musicWasPlayingKey) !== "1") return false;
+  return tryPlayWeddingMusic();
+}
+
 function initMusicPersistence() {
   if (musicPersistenceInitialized) return;
   musicPersistenceInitialized = true;
@@ -693,6 +732,7 @@ async function tryPlayWeddingMusic() {
   if (isMusicMuted()) return false;
   const audio = getWeddingAudio();
   if (!audio.paused && !audio.ended) {
+    persistMusicPlaybackState();
     updateMusicToggleUi();
     return true;
   }
@@ -702,6 +742,9 @@ async function tryPlayWeddingMusic() {
     sessionStorage.setItem(musicStartedKey, "1");
     sessionStorage.setItem(musicWasPlayingKey, "1");
     if (musicToggleButton) musicToggleButton.hidden = false;
+    persistMusicPlaybackState();
+    lockContinuousPlayback();
+    startMusicProgressSaver();
     updateMusicToggleUi();
     return true;
   } catch {
@@ -709,6 +752,23 @@ async function tryPlayWeddingMusic() {
     return false;
   }
 }
+
+/** Start on user gesture; resume without resetting if already playing. */
+async function ensureMusicOnUserGesture() {
+  if (isMusicMuted()) return false;
+  return tryPlayWeddingMusic();
+}
+
+window.__weddingMusic = {
+  ensurePlaying: ensureMusicOnUserGesture,
+  persist: persistMusicPlaybackState,
+  lockContinuous: lockContinuousPlayback,
+  isPlaying() {
+    if (!syncWeddingAudioRef() && !weddingAudio) return false;
+    const audio = getWeddingAudio();
+    return !audio.paused && !audio.ended;
+  },
+};
 
 async function resumeMusicIfNeeded() {
   if (isMusicMuted()) return false;
@@ -802,11 +862,6 @@ function initMusicToggle() {
 }
 
 function initGlobalMusicAutoplay() {
-  const startMusicOnFirstInteraction = () => {
-    if (isMusicMuted()) return;
-    tryPlayWeddingMusic();
-  };
-
   const attemptAutoplayNow = () => {
     if (isMusicMuted()) return;
     tryPlayWeddingMusic().then((started) => {
@@ -817,28 +872,36 @@ function initGlobalMusicAutoplay() {
   if (window.__WEDDING_STATIC_PREVIEW__ === true) {
     sessionStorage.setItem(musicWasPlayingKey, "1");
     attemptAutoplayNow();
-  } else if (sessionStorage.getItem(musicWasPlayingKey) === "1" && !isMusicMuted()) {
-    resumeMusicIfNeeded().then((started) => {
-      if (!started) attachMusicInteractionFallback();
-    });
+  } else if (!isMusicMuted()) {
+    if (sessionStorage.getItem(musicWasPlayingKey) === "1") {
+      ensureContinuousMusic().then((started) => {
+        if (!started) attachMusicInteractionFallback();
+      });
+    }
+    attemptAutoplayNow();
   }
 
-  const interactionEvents = ["pointerdown", "keydown", "touchstart"];
-  interactionEvents.forEach((eventName) => {
-    document.addEventListener(eventName, startMusicOnFirstInteraction, {
-      once: true,
-      passive: true,
-      capture: true,
+  if (!window.__weddingMusicGestureBound) {
+    window.__weddingMusicGestureBound = true;
+    const onUserGesture = () => {
+      ensureMusicOnUserGesture();
+    };
+    ["pointerdown", "keydown", "touchstart"].forEach((eventName) => {
+      document.addEventListener(eventName, onUserGesture, {
+        passive: true,
+        capture: true,
+      });
     });
-  });
+  }
 }
 
 function initWeddingMusic() {
   initMusicPersistence();
   initGlobalMusicAutoplay();
   initMusicToggle();
+  startMusicProgressSaver();
 
-  resumeMusicIfNeeded().then((started) => {
+  ensureContinuousMusic().then((started) => {
     if (!started && sessionStorage.getItem(musicWasPlayingKey) === "1") {
       attachMusicInteractionFallback();
     }
@@ -847,6 +910,8 @@ function initWeddingMusic() {
 
 function initMobileNav() {
   if (window.__WEDDING_STATIC_PREVIEW__ === true) return;
+  if (document.body.classList.contains("invite-alive")) return;
+  if (document.body.classList.contains("intro-page")) return;
   if (introScreen || document.querySelector(".mobile-nav")) return;
 
   const currentPath = normalizePath(window.location.pathname);
@@ -938,6 +1003,7 @@ function initHomeEnter() {
   if (!document.body.classList.contains("home-page")) return;
 
   const targets = [
+    document.querySelector(".home-page .invite-nav-bar"),
     document.querySelector(".home-page .site-nav"),
     document.querySelector(".home-page .hero"),
     document.querySelector(".home-page main"),
@@ -952,7 +1018,7 @@ function initHomeEnter() {
   const hero = document.querySelector(".home-page .hero");
   if (hero) {
     const heroParts = hero.querySelectorAll(
-      ".eyebrow, .home-welcome, .couple-name, .home-photo, .home-monogram-divider, .date, .home-location, .home-invite-line, .home-hero-actions, .countdown-label, .countdown"
+      ".eyebrow, .home-welcome-banner, .couple-name, .home-photo, .home-monogram-divider, .home-hero-meta, .home-invite-line, .home-hero-actions, .home-countdown-panel"
     );
     heroParts.forEach((element, index) => {
       element.classList.add("home-enter-child");
@@ -969,10 +1035,12 @@ function initInnerPageEnter() {
   const introInsideShell = Boolean(pageIntro && pageShell?.contains(pageIntro));
 
   const targets = [
+    document.querySelector(".inner-page .invite-nav-bar"),
     document.querySelector(".inner-page .site-nav"),
     introInsideShell ? null : pageIntro,
     pageShell,
     document.querySelector(".inner-page .venues-main"),
+    document.querySelector(".inner-page .inner-signoff"),
   ].filter(Boolean);
 
   targets.forEach((element, index) => {
@@ -996,17 +1064,20 @@ function initHomeWelcome() {
   if (!document.body.classList.contains("home-page")) return;
 
   const welcome = document.getElementById("home-welcome");
+  const welcomeBanner = document.getElementById("home-welcome-banner");
   if (!welcome) return;
 
   const inviteId = getActiveQrInviteId();
   if (!inviteId) {
-    welcome.hidden = true;
     welcome.textContent = "";
+    welcome.hidden = true;
+    if (welcomeBanner) welcomeBanner.hidden = true;
     return;
   }
 
   welcome.textContent = "Your invitation is linked — we can't wait to celebrate with you.";
   welcome.hidden = false;
+  if (welcomeBanner) welcomeBanner.hidden = false;
 }
 
 function initHomeScrollCards() {
@@ -1132,7 +1203,10 @@ function initScrollReveal() {
 
   const seen = new Set();
   let revealIndex = 0;
-  const isMobileViewport = window.matchMedia("(max-width: 768px)").matches;
+  const isInviteAlive = document.body.classList.contains("invite-alive");
+  const isMobileViewport = window.matchMedia(
+    isInviteAlive ? "(max-width: 767px)" : "(max-width: 768px)"
+  ).matches;
 
   function shouldSkipReveal(element) {
     if (!(element instanceof HTMLElement)) return true;
@@ -1141,6 +1215,7 @@ function initScrollReveal() {
     if (element.classList.contains("home-scroll-reveal")) return true;
     if (element.classList.contains("home-enter")) return true;
     if (element.classList.contains("home-enter-child")) return true;
+    if (element.classList.contains("motion-reveal")) return true;
     if (element.matches("[data-no-scroll-reveal], .no-scroll-reveal")) return true;
     if (element.closest(".mobile-nav, .site-nav")) return true;
     if (element.closest(".index-envelope-stage, .index-envelope-wrapper")) return true;
@@ -1151,7 +1226,8 @@ function initScrollReveal() {
     if (shouldSkipReveal(element)) return;
     seen.add(element);
     const delayStep = revealIndex % 4;
-    element.style.setProperty("--scroll-reveal-delay", `${delayStep * 0.06}s`);
+    const delayUnit = isInviteAlive && isMobileViewport ? 0.08 : 0.06;
+    element.style.setProperty("--scroll-reveal-delay", `${delayStep * delayUnit}s`);
     revealIndex += 1;
     element.classList.add("scroll-reveal");
   }
@@ -1185,10 +1261,20 @@ function initScrollReveal() {
       });
     },
     {
-      threshold: isMobileViewport ? 0.03 : 0.2,
-      rootMargin: isMobileViewport
-        ? "0px 0px -4% 0px"
-        : "0px 0px -12% 0px",
+      threshold: isInviteAlive
+        ? isMobileViewport
+          ? 0.04
+          : 0.14
+        : isMobileViewport
+          ? 0.03
+          : 0.2,
+      rootMargin: isInviteAlive
+        ? isMobileViewport
+          ? "0px 0px -2% 0px"
+          : "0px 0px -10% 0px"
+        : isMobileViewport
+          ? "0px 0px -4% 0px"
+          : "0px 0px -12% 0px",
     }
   );
 
@@ -1205,7 +1291,7 @@ function initScrollReveal() {
   }
 
   requestAnimationFrame(fallbackRevealVisibleTargets);
-  window.setTimeout(fallbackRevealVisibleTargets, 180);
+  window.setTimeout(fallbackRevealVisibleTargets, isInviteAlive && isMobileViewport ? 240 : 180);
 }
 
 let smoothScrollInitialized = false;
@@ -1344,8 +1430,8 @@ function onTurboPageLoad() {
   initAppShell();
   syncQrInviteContext();
   initCurrentPage();
-  if (!isMusicMuted() && sessionStorage.getItem(musicWasPlayingKey) === "1") {
-    resumeMusicIfNeeded();
+  if (!isMusicMuted()) {
+    ensureContinuousMusic();
   }
 }
 
@@ -1848,6 +1934,18 @@ function initCurrentPage() {
   initSmoothScrollEffect();
   maybeShowQrRsvpBanner();
   initIntroHandoffEnter();
+
+  if (
+    document.body.classList.contains("home-page") &&
+    !document.body.classList.contains("home-intro-enter") &&
+    !document.body.classList.contains("intro-handoff-active") &&
+    sessionStorage.getItem(introHandoffKey) !== "1"
+  ) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => revealHomeEnter());
+    });
+  }
+
   initStoryPagination();
   initStoryPhotoLightbox();
   initAttirePhotoLightbox();
@@ -1879,7 +1977,11 @@ if (canRunWeddingInit() && !window.__weddingTurboLifecycleBound) {
   window.__weddingTurboLifecycleBound = true;
 
   document.addEventListener("turbo:before-visit", () => {
-    persistMusicPlaybackState();
+    if (!isMusicMuted() && sessionStorage.getItem(musicStartedKey) === "1") {
+      lockContinuousPlayback();
+    } else {
+      persistMusicPlaybackState();
+    }
   });
 
   document.addEventListener("turbo:before-render", () => {

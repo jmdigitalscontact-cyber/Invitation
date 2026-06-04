@@ -1,0 +1,11 @@
+.env
+.cursor/
+**/__pycache__/
+logs/
+keys/
+Invitation/
+rsvp/qr_codes/*.png
+rsvp/qr_codes/*.jpg
+!rsvp/qr_codes/.gitkeep
+reception/uploads/*
+!reception/uploads/.gitkeep

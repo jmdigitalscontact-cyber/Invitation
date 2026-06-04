@@ -25,6 +25,10 @@ This folder is a **preview-only** copy of the invitation site for showing client
 
 No `vercel.json` is required for this static site.
 
+## MCP tools (design refresh)
+
+Figma, GSAP, a11y, and browser MCP servers are configured in the repo root: see [`.cursor/MCP_SETUP.md`](../.cursor/MCP_SETUP.md).
+
 ## Local preview
 
 ```powershell

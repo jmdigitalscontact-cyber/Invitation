@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#1a1a1a" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#fbf7f2" />
     <meta
       name="description"
       content="Jason & Rhona Mae â€” November 11, 2026. Ceremony at St. John Marie Vianney Parish Church, reception at Alta Terra Tagaytay."
@@ -28,26 +28,17 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
-    <link rel="preload" href="./photos/photos/background.jpg" as="image" />
+    <link rel="stylesheet" href="./invite-alive.css" />
+    <link rel="preload" href="./photos/photos/photo-main.jpg" as="image" />
   </head>
-  <body class="home-page">
-    <div class="home-backdrop" aria-hidden="true">
-      <div class="home-backdrop__media">
-        <img
-          class="home-backdrop__photo"
-          src="./photos/photos/bg-pages.jpg"
-          alt=""
-          width="3300"
-          height="2200"
-          decoding="async"
-          fetchpriority="high"
-        />
-        <div class="home-backdrop__shade"></div>
-      </div>
-      <div class="home-backdrop__frame"></div>
+  <body class="home-page invite-alive">
+    <div class="invite-bg" aria-hidden="true">
+      <div class="invite-bg__petals"></div>
     </div>
 
-    <div class="home-shell">
+    <div class="home-shell invite-card">
+      <div class="home-card-accent" aria-hidden="true"></div>
+
       <nav class="site-nav" aria-label="Primary">
         <a class="site-nav-link" href="./home.html" aria-current="page">Home</a>
         <a class="site-nav-link" href="./story.html">Our Story</a>
@@ -59,8 +50,12 @@
       </nav>
 
       <header class="hero home-invite-card" id="top">
-        <p class="eyebrow">You are Invited</p>
-        <p class="home-welcome" id="home-welcome" hidden></p>
+        <p class="eyebrow">You are cordially invited</p>
+
+        <div class="home-welcome-banner" id="home-welcome-banner" hidden>
+          <p class="home-welcome" id="home-welcome"></p>
+        </div>
+
         <h1 class="couple-name">Jason &amp; Rhona Mae</h1>
 
         <section class="home-photo" aria-label="Couple photo">
@@ -82,32 +77,66 @@
           <span class="home-monogram-text">The Berbers</span>
           <span class="home-monogram-line"></span>
         </div>
-        <p class="date">November 11, 2026</p>
-        <p class="home-location">Silang &amp; Tagaytay, Cavite</p>
+
+        <div class="home-hero-meta">
+          <p class="date">November 11, 2026</p>
+          <p class="home-location">
+            <span class="home-location-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 20c-4-3-6-6-6-9a6 6 0 1 1 12 0c0 3-2 6-6 9z" />
+                <circle cx="12" cy="11" r="2.2" />
+              </svg>
+            </span>
+            Silang &amp; Tagaytay, Cavite
+          </p>
+        </div>
+
         <p class="home-invite-line">
           Together with our families, we joyfully invite you to celebrate our wedding day.
         </p>
 
         <div class="home-hero-actions">
-          <a class="btn btn-primary home-rsvp-cta" href="./rsvp.html">RSVP Now</a>
+          <a class="btn btn-primary home-rsvp-cta" href="./rsvp.html">RSVP with love</a>
         </div>
 
-        <p class="countdown-label">Counting down to our forever</p>
-        <div class="countdown" aria-label="Wedding countdown" aria-live="polite">
-          <div><span id="days">00</span><small>Days</small></div>
-          <div><span id="hours">00</span><small>Hours</small></div>
-          <div><span id="minutes">00</span><small>Minutes</small></div>
-          <div class="countdown-seconds"><span id="seconds">00</span><small>Seconds</small></div>
-        </div>
+        <section class="home-countdown-panel" aria-labelledby="countdown-heading">
+          <p class="countdown-label" id="countdown-heading">Counting down to our forever</p>
+          <div class="countdown" aria-label="Wedding countdown" aria-live="polite">
+            <div class="countdown-cell">
+              <span id="days">00</span>
+              <small>Days</small>
+            </div>
+            <div class="countdown-cell">
+              <span id="hours">00</span>
+              <small>Hours</small>
+            </div>
+            <div class="countdown-cell">
+              <span id="minutes">00</span>
+              <small>Minutes</small>
+            </div>
+            <div class="countdown-cell countdown-seconds">
+              <span id="seconds">00</span>
+              <small>Seconds</small>
+            </div>
+          </div>
+        </section>
       </header>
 
-      <main>
+      <main class="home-main">
+        <div class="home-section-ornament" aria-hidden="true">
+          <span class="home-section-ornament__line"></span>
+          <span class="home-section-ornament__gem"></span>
+          <span class="home-section-ornament__line"></span>
+        </div>
+
         <header class="home-section-intro">
+          <p class="home-section-eyebrow">Plan your visit</p>
           <h2 class="home-section-title">The Celebration</h2>
           <p class="home-section-lead">Everything you need for our wedding day.</p>
         </header>
+
         <section class="home-info-grid" aria-label="Wedding details">
-          <article class="info-card">
+          <article class="info-card info-card--ceremony">
             <header class="info-card-head">
               <span class="info-card-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -123,11 +152,14 @@
               <p class="info-card-text">Lalaan II, Silang, Cavite</p>
             </div>
             <footer class="info-card-footer">
-              <a class="info-card-link" href="./venues.html">View details <span aria-hidden="true">â†’</span></a>
+              <a class="info-card-cta" href="./venues.html">
+                View details
+                <span class="info-card-cta__arrow" aria-hidden="true">â†’</span>
+              </a>
             </footer>
           </article>
 
-          <article class="info-card">
+          <article class="info-card info-card--reception">
             <header class="info-card-head">
               <span class="info-card-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -142,11 +174,14 @@
               <p class="info-card-text">Tagaytay, Cavite</p>
             </div>
             <footer class="info-card-footer">
-              <a class="info-card-link" href="./venues.html">View details <span aria-hidden="true">â†’</span></a>
+              <a class="info-card-cta" href="./venues.html">
+                View details
+                <span class="info-card-cta__arrow" aria-hidden="true">â†’</span>
+              </a>
             </footer>
           </article>
 
-          <article class="info-card">
+          <article class="info-card info-card--rsvp">
             <header class="info-card-head">
               <span class="info-card-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -160,11 +195,14 @@
               <p class="info-card-text">Kindly respond on or before October 20, 2026.</p>
             </div>
             <footer class="info-card-footer">
-              <a class="info-card-link" href="./rsvp.html">How to RSVP <span aria-hidden="true">â†’</span></a>
+              <a class="info-card-cta info-card-cta--gold" href="./rsvp.html">
+                How to RSVP
+                <span class="info-card-cta__arrow" aria-hidden="true">â†’</span>
+              </a>
             </footer>
           </article>
 
-          <article class="info-card">
+          <article class="info-card info-card--help">
             <header class="info-card-head">
               <span class="info-card-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -179,13 +217,17 @@
               <p class="info-card-text">Message us for directions, accommodation assistance, or general help.</p>
             </div>
             <footer class="info-card-footer">
-              <a class="info-card-link" href="./faq.html">View guest guide <span aria-hidden="true">â†’</span></a>
+              <a class="info-card-cta" href="./faq.html">
+                View guest guide
+                <span class="info-card-cta__arrow" aria-hidden="true">â†’</span>
+              </a>
             </footer>
           </article>
         </section>
       </main>
 
       <footer class="home-signoff">
+        <div class="home-signoff-ornament" aria-hidden="true"></div>
         <p class="home-signoff-eyebrow">With love,</p>
         <p class="home-signoff-names couple-name">Jason &amp; Rhona Mae</p>
         <p class="home-signoff-date">November 11, 2026</p>
@@ -193,7 +235,7 @@
     </div>
 
     <div id="wedding-audio-player" data-turbo-permanent>
-      <audio id="wedding-music" loop preload="auto">
+      <audio id="wedding-music" loop preload="none">
         <source src="./audio/ambient.mp3" type="audio/mpeg" />
       </audio>
     </div>
@@ -224,6 +266,7 @@
             });
           });
         } else {
+          body.classList.add("invite-alive-ready");
           return;
         }
 
@@ -236,7 +279,7 @@
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.13/dist/turbo.es2017-umd.min.js"></script>
     <script src="./invitation-reload.js"></script>
-    <script src="./static-preview.js"></script>
+    <script src="./invite-alive.js"></script>
     <script src="./script.js"></script>
   </body>
 </html>

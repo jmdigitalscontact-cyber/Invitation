@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#1a1a1a" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#fbf7f2" />
     <meta name="description" content="Attire guide for Jason & Rhona Mae wedding — November 11, 2026." />
     <title>Attire | Jason & Rhona Mae</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -13,25 +13,14 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./invite-alive.css" />
     <link rel="preload" href="./photos/photos/background.jpg" as="image" />
   </head>
-  <body class="inner-page attire-page cinematic-page">
-    <div class="cinematic-backdrop" aria-hidden="true">
-      <div class="cinematic-backdrop__media">
-        <img
-          class="cinematic-backdrop__photo"
-          src="./photos/photos/bg-pages.jpg"
-          alt=""
-          width="3300"
-          height="2200"
-          decoding="async"
-          loading="eager"
-          fetchpriority="high"
-        />
-        <div class="cinematic-backdrop__shade" aria-hidden="true"></div>
-      </div>
-      <div class="cinematic-backdrop__frame" aria-hidden="true"></div>
+  <body class="inner-page attire-page invite-alive">
+    <div class="invite-bg" aria-hidden="true">
+      <div class="invite-bg__petals"></div>
     </div>
+
 
     <div class="book-shell">
       <div class="book-stack">
@@ -112,6 +101,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@hotwired/turbo@8.0.13/dist/turbo.es2017-umd.min.js"></script>
     <script src="./invitation-reload.js"></script>
+    <script src="./invite-alive.js"></script>
     <script src="./script.js"></script>
   </body>
 </html>
